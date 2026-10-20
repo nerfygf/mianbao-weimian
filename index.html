@@ -19,12 +19,34 @@
         }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 0; }
         
-        /* 導覽列樣式 */
-        header { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; background: var(--bg-color); border-bottom: 1px solid var(--border-color); }
-        .logo { font-size: 1.2rem; font-weight: bold; letter-spacing: 1px; }
+        /* 導覽列樣式 (電腦與預設) */
+        header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 20px 40px; 
+            background: var(--bg-color); 
+            border-bottom: 1px solid var(--border-color); 
+        }
+        .logo { font-size: 1.2rem; font-weight: bold; letter-spacing: 1px; flex-shrink: 0; }
+        nav { 
+            display: flex; 
+            align-items: center; 
+            flex-wrap: nowrap; 
+        }
         nav a { margin-left: 20px; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; }
         nav a:hover { color: var(--text-main); }
-        .login-nav-btn { background: var(--text-main); color: white !important; padding: 6px 14px; border-radius: 6px; font-weight: bold; }
+        
+        /* 重點修正：店家登入按鈕強制不換行且不被擠壓 */
+        .login-nav-btn { 
+            background: var(--text-main); 
+            color: white !important; 
+            padding: 6px 14px; 
+            border-radius: 6px; 
+            font-weight: bold; 
+            white-space: nowrap; 
+            flex-shrink: 0; 
+        }
 
         .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
 
@@ -61,10 +83,6 @@
             font-size: 8rem;
             opacity: 0.9;
         }
-        @media (max-width: 768px) {
-            .hero-emoji { display: none; }
-            .hero-card { padding: 30px 20px; }
-        }
 
         /* 商品網格 */
         .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 40px; }
@@ -81,7 +99,6 @@
         /* 表單與卡片區塊 */
         .section-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 35px; margin-top: 35px; }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } }
         
         .input-group { margin-bottom: 20px; }
         .input-group label { display: block; font-size: 0.9rem; font-weight: bold; margin-bottom: 8px; color: var(--text-main); }
@@ -104,15 +121,28 @@
         .btn-submit:hover { background: #523f32; }
 
         .search-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 15px; align-items: end; }
-        @media (max-width: 768px) { .search-row { grid-template-columns: 1fr; } }
 
         #orderResult, #submitResult { margin-top: 15px; padding: 15px; border-radius: 8px; display: none; font-size: 0.95rem; white-space: pre-wrap; overflow-wrap: anywhere; }
         .success-box { background: #eef7f2; border: 1px solid #bce3cc; color: #236c43; }
         .error-box { background: #fcf2f2; border: 1px solid #f5c6cb; color: #a94442; }
+
+        /* 手機版響應式 RWD 微調 */
+        @media (max-width: 768px) {
+            .hero-emoji { display: none; }
+            .hero-card { padding: 30px 20px; }
+            
+            header { padding: 15px 20px; flex-wrap: wrap; gap: 10px; }
+            .logo { font-size: 1.1rem; }
+            nav { width: 100%; justify-content: space-between; overflow-x: auto; padding-bottom: 5px; }
+            nav a { margin-left: 0; font-size: 0.85rem; padding: 2px 4px; }
+            .login-nav-btn { padding: 4px 10px; }
+            
+            .form-grid { grid-template-columns: 1fr; }
+            .search-row { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
-
     <!-- 頂部導覽列 -->
     <header>
         <div class="logo">☾ 麵包未眠 <span style="font-size:0.75rem; font-weight:normal; color:#7a6e63;">BAKERY AFTER DARK</span></div>
@@ -125,7 +155,6 @@
     </header>
 
     <div class="container">
-
         <!-- 1. 形象宣傳卡片 (Hero Section) -->
         <div class="hero-card">
             <div class="hero-subtitle">BAKED WITH LOVE · PREORDER ONLINE</div>
@@ -141,14 +170,12 @@
         <!-- 2. 商品選購區 -->
         <h2 id="menu" style="font-size: 1.8rem; margin-bottom: 5px;">今日想帶走哪一款？</h2>
         <p style="color: var(--text-muted); margin-bottom: 30px;">選取您喜愛的商品數量，填寫下方訂購資料即可送出訂單。</p>
-
         <div class="product-grid" id="productGrid"></div>
 
         <!-- 3. 線上預訂表單區塊 -->
         <div class="section-card" id="orderForm">
             <h2 style="margin-top:0;">🛒 線上預訂表單</h2>
             <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 25px;">請填寫取貨人資訊與預計取貨時間。</p>
-
             <form id="checkoutForm" onsubmit="submitOrder(event)">
                 <div class="form-grid">
                     <div class="input-group">
@@ -157,7 +184,7 @@
                     </div>
                     <div class="input-group">
                         <label>聯絡電話 / 手機 *</label>
-                        <input type="text" id="customerPhone" placeholder="例如：0912345678" required>
+                        <input type="tel" id="customerPhone" placeholder="例如：0912345678" pattern="^09\d{8}$" maxlength="10" title="請輸入 10 位數手機號碼" required>
                     </div>
                 </div>
 
@@ -201,7 +228,6 @@
 
                 <button type="submit" class="btn-submit">確認送出訂單</button>
             </form>
-
             <div id="submitResult"></div>
         </div>
 
@@ -221,15 +247,11 @@
                 </div>
                 <button type="button" onclick="searchOrder()" class="btn-submit">查詢訂單</button>
             </div>
-
             <div id="orderResult"></div>
         </div>
     </div>
 
     <script>
-        // 取貨日期由顧客自行選擇，不預設固定日期。
-
-        // 初始化設定與 Supabase；設定有問題時，讓頁面顯示可讀的錯誤，而不是直接中斷
         const config = window.BREAD_CONFIG || {};
         let supabaseClient = null;
         let supabaseInitError = '';
@@ -251,7 +273,6 @@
 
         const cart = {};
 
-        // 載入與渲染商品
         function renderProducts() {
             const grid = document.getElementById('productGrid');
             grid.innerHTML = '';
@@ -289,7 +310,6 @@
                 subtotal += (cart[p.id] || 0) * p.price;
             });
             
-            // 計算運費：選擇宅配到府為 160，否則為 0
             const methodSelect = document.getElementById('pickupMethod');
             const deliveryFee = (methodSelect && methodSelect.value === 'delivery') ? 160 : 0;
             const total = subtotal + deliveryFee;
@@ -298,7 +318,6 @@
             return { subtotal, deliveryFee, total };
         }
 
-        // 送出訂單：顯示 Supabase 回傳的完整診斷資訊
         async function submitOrder(e) {
             e.preventDefault();
             const resultBox = document.getElementById('submitResult');
@@ -308,8 +327,7 @@
 
             if (!supabaseClient) {
                 resultBox.className = 'error-box';
-                resultBox.textContent = '無法連線資料庫：' + (supabaseInitError || 'Supabase 尚未初始化。') +
-                    '\n\n請確認 config.js 的 Supabase URL 與 Publishable/anon key 設定。';
+                resultBox.textContent = '無法連線資料庫：' + (supabaseInitError || 'Supabase 尚未初始化。');
                 return;
             }
 
@@ -318,7 +336,7 @@
                 const phone = document.getElementById('customerPhone').value.trim();
                 const date = document.getElementById('pickupDate').value;
                 const timeSlot = document.getElementById('pickupTimeSlot').value;
-                const method = document.getElementById('pickupMethod').value; // 資料庫限定值：pickup 或 delivery
+                const method = document.getElementById('pickupMethod').value;
                 const note = document.getElementById('orderNote').value.trim();
 
                 const { subtotal, deliveryFee, total } = calculateTotal();
@@ -348,7 +366,6 @@
                     items: items.join(', '),
                     method: method,
                     pickup_time: `${date} ${timeSlot}`,
-                    // 保留 YYYY-MM-DD，避免時區轉換讓日期前後偏移。
                     requested_date: date,
                     note: note,
                     subtotal: subtotal,
@@ -365,33 +382,20 @@
 
                 if (error) {
                     resultBox.className = 'error-box';
-                    resultBox.textContent =
-                        '❌ 訂單送出失敗\n' +
-                        '錯誤訊息：' + (error.message || '無') + '\n' +
-                        '錯誤代碼：' + (error.code || '無') + '\n' +
-                        '詳細資訊：' + (error.details || '無') + '\n' +
-                        '修正提示：' + (error.hint || '無') + '\n\n' +
-                        '請將以上錯誤訊息截圖傳給協助您的人員。';
-                    console.error('Supabase 訂單送出錯誤：', error);
+                    resultBox.textContent = '❌ 訂單送出失敗\n錯誤訊息：' + (error.message || '無');
                     return;
                 }
 
                 if (!data || !data.length) {
                     resultBox.className = 'error-box';
-                    resultBox.textContent =
-                        '資料庫未回傳訂單資料。請檢查 orders 資料表的新增權限與回傳資料權限（RLS）。';
-                    console.error('Supabase insert 沒有回傳 data。');
+                    resultBox.textContent = '資料庫未回傳訂單資料。';
                     return;
                 }
 
                 resultBox.className = 'success-box';
-                resultBox.textContent =
-                    '🎉 訂單已成功送出！\n' +
-                    '您的訂單編號為：' + data[0].id + '\n' +
-                    '請牢記訂單編號與手機號碼，以便查詢訂單。';
+                resultBox.textContent = '🎉 訂單已成功送出！\n您的訂單編號為：' + data[0].id + '\n請牢記訂單編號與手機號碼。';
 
                 document.getElementById('checkoutForm').reset();
-                // 不設定固定日期，讓下一位顧客自行選擇。
                 (config.products || []).forEach(p => {
                     cart[p.id] = 0;
                     const qty = document.getElementById(`qty-${p.id}`);
@@ -400,15 +404,10 @@
                 calculateTotal();
             } catch (err) {
                 resultBox.className = 'error-box';
-                resultBox.textContent =
-                    '❌ 送出訂單時發生程式例外\n' +
-                    '錯誤訊息：' + (err && err.message ? err.message : String(err)) + '\n\n' +
-                    '請將這段訊息截圖傳給協助您的人員。';
-                console.error('訂單送出時發生例外：', err);
+                resultBox.textContent = '❌ 發生例外錯誤：' + (err && err.message ? err.message : String(err));
             }
         }
 
-        // 查詢訂單功能
         async function searchOrder() {
             const orderId = document.getElementById('orderIdInput').value.trim();
             const phone = document.getElementById('phoneInput').value.trim();
@@ -426,7 +425,7 @@
 
             if (!supabaseClient) {
                 resultArea.className = 'error-box';
-                resultArea.textContent = '無法連線資料庫：' + (supabaseInitError || 'Supabase 尚未初始化。');
+                resultArea.textContent = '無法連線資料庫。';
                 return;
             }
 
@@ -440,15 +439,10 @@
 
                 if (error || !data) {
                     resultArea.className = 'error-box';
-                    resultArea.textContent = error
-                        ? '❌ 查詢失敗\n錯誤訊息：' + (error.message || '無') +
-                          '\n錯誤代碼：' + (error.code || '無') +
-                          '\n詳細資訊：' + (error.details || '無')
-                        : '❌ 找不到相關訂單，請確認訂單編號與手機號碼是否正確。';
-                    console.error('Supabase 訂單查詢錯誤：', error);
+                    resultArea.textContent = '❌ 找不到相關訂單，請確認訂單編號與手機號碼是否正確。';
                 } else {
                     resultArea.className = 'success-box';
-                    resultArea.textContent =
+                    resultArea.textContent = 
                         '✅ 查詢成功！\n' +
                         '訂單編號：' + data.id + '\n' +
                         '訂購人：' + (data.customer_name || '') + '\n' +
@@ -465,14 +459,10 @@
                 }
             } catch (err) {
                 resultArea.className = 'error-box';
-                resultArea.textContent =
-                    '❌ 查詢時發生程式例外\n錯誤訊息：' +
-                    (err && err.message ? err.message : String(err));
-                console.error('訂單查詢時發生例外：', err);
+                resultArea.textContent = '❌ 查詢時發生錯誤';
             }
         }
 
-        // 初始化
         renderProducts();
         if (!Array.isArray(config.products) || config.products.length === 0) {
             const grid = document.getElementById('productGrid');
