@@ -19,7 +19,7 @@
         }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 0; }
         
-        /* 導覽列樣式 (電腦與預設) */
+        /* 導覽列樣式 */
         header { 
             display: flex; 
             justify-content: space-between; 
@@ -27,17 +27,18 @@
             padding: 20px 40px; 
             background: var(--bg-color); 
             border-bottom: 1px solid var(--border-color); 
+            position: relative;
         }
         .logo { font-size: 1.2rem; font-weight: bold; letter-spacing: 1px; flex-shrink: 0; }
+        
         nav { 
             display: flex; 
             align-items: center; 
-            flex-wrap: nowrap; 
         }
         nav a { margin-left: 20px; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; }
         nav a:hover { color: var(--text-main); }
         
-        /* 重點修正：店家登入按鈕強制不換行且不被擠壓 */
+        /* 店家登入按鈕 */
         .login-nav-btn { 
             background: var(--text-main); 
             color: white !important; 
@@ -45,7 +46,16 @@
             border-radius: 6px; 
             font-weight: bold; 
             white-space: nowrap; 
-            flex-shrink: 0; 
+        }
+
+        /* 漢堡按鈕 (預設隱藏，手機版顯示) */
+        .hamburger-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-main);
         }
 
         .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
@@ -84,11 +94,11 @@
             opacity: 0.9;
         }
 
-        /* 商品網格 */
+        /* 商品網格與卡片樣式 (對應圖片設計)[cite: 2] */
         .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 40px; }
         .product-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
         .product-img-box { background: #f4ede2; height: 140px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 3rem; margin-bottom: 15px; }
-        .product-name { font-size: 1.1rem; font-weight: bold; margin-bottom: 5px; }
+        .product-name { font-size: 1.1rem; font-weight: bold; margin-bottom: 5px; color: var(--text-main); }
         .product-desc { font-size: 0.85rem; color: var(--text-muted); height: 2.5em; margin-bottom: 15px; }
         .product-footer { display: flex; justify-content: space-between; align-items: center; }
         .product-price { font-weight: bold; color: var(--text-main); }
@@ -126,16 +136,56 @@
         .success-box { background: #eef7f2; border: 1px solid #bce3cc; color: #236c43; }
         .error-box { background: #fcf2f2; border: 1px solid #f5c6cb; color: #a94442; }
 
-        /* 手機版響應式 RWD 微調 */
+        /* 服務與政策區塊樣式 */
+        .policy-section { background: #f4ede2; border-radius: 16px; padding: 30px; margin-top: 40px; font-size: 0.9rem; color: #5a493c; line-height: 1.6; }
+        .policy-section h3 { margin-top: 0; color: #3b2c22; font-size: 1.2rem; margin-bottom: 15px; }
+        .policy-section h4 { color: #3b2c22; margin-top: 20px; margin-bottom: 8px; font-size: 1rem; }
+        .policy-section ul { padding-left: 20px; margin-top: 5px; }
+        .policy-section li { margin-bottom: 6px; }
+
+        /* 手機版 RWD 與漢堡選單樣式 */
         @media (max-width: 768px) {
             .hero-emoji { display: none; }
             .hero-card { padding: 30px 20px; }
             
-            header { padding: 15px 20px; flex-wrap: wrap; gap: 10px; }
-            .logo { font-size: 1.1rem; }
-            nav { width: 100%; justify-content: space-between; overflow-x: auto; padding-bottom: 5px; }
-            nav a { margin-left: 0; font-size: 0.85rem; padding: 2px 4px; }
-            .login-nav-btn { padding: 4px 10px; }
+            header { padding: 15px 20px; }
+            
+            /* 顯示漢堡按鈕 */
+            .hamburger-btn { display: block; }
+            
+            /* 手機版導覽列預設隱藏，變為下拉選單 */
+            nav {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--bg-color);
+                border-bottom: 1px solid var(--border-color);
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 15px 25px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+                box-sizing: border-box;
+                z-index: 100;
+            }
+            
+            nav.active {
+                display: flex;
+            }
+
+            nav a {
+                margin: 10px 0;
+                width: 100%;
+                font-size: 1.05rem;
+            }
+
+            .login-nav-btn {
+                display: inline-block;
+                text-align: center;
+                padding: 10px;
+                margin-top: 5px;
+            }
             
             .form-grid { grid-template-columns: 1fr; }
             .search-row { grid-template-columns: 1fr; }
@@ -146,10 +196,16 @@
     <!-- 頂部導覽列 -->
     <header>
         <div class="logo">☾ 麵包未眠 <span style="font-size:0.75rem; font-weight:normal; color:#7a6e63;">BAKERY AFTER DARK</span></div>
-        <nav>
-            <a href="#menu">本週麵包</a>
-            <a href="#orderForm">預訂麵包</a>
-            <a href="#orderSearch">查詢訂單</a>
+        
+        <!-- 手機版漢堡按鈕 -->
+        <button class="hamburger-btn" onclick="toggleMenu()">☰</button>
+
+        <!-- 導覽列選單項目 -->
+        <nav id="navMenu">
+            <a href="#menu" onclick="toggleMenu()">本週麵包</a>
+            <a href="#orderForm" onclick="toggleMenu()">預訂麵包</a>
+            <a href="#orderSearch" onclick="toggleMenu()">查詢訂單</a>
+            <a href="#policy" onclick="toggleMenu()">服務與政策</a>
             <a href="admin.html" class="login-nav-btn">店家登入</a>
         </nav>
     </header>
@@ -167,7 +223,7 @@
             <div class="hero-emoji">🥐</div>
         </div>
 
-        <!-- 2. 商品選購區 -->
+        <!-- 2. 商品選購區 (保留圖片中的商品版型與數量控制)[cite: 2] -->
         <h2 id="menu" style="font-size: 1.8rem; margin-bottom: 5px;">今日想帶走哪一款？</h2>
         <p style="color: var(--text-muted); margin-bottom: 30px;">選取您喜愛的商品數量，填寫下方訂購資料即可送出訂單。</p>
         <div class="product-grid" id="productGrid"></div>
@@ -184,7 +240,8 @@
                     </div>
                     <div class="input-group">
                         <label>聯絡電話 / 手機 *</label>
-                        <input type="tel" id="customerPhone" placeholder="例如：0912345678" pattern="^09\d{8}$" maxlength="10" title="請輸入 10 位數手機號碼" required>
+                        <!-- 不限制手機繁複格式，維持一般輸入 -->
+                        <input type="text" id="customerPhone" placeholder="例如：0912345678" required>
                     </div>
                 </div>
 
@@ -218,7 +275,7 @@
 
                 <div class="checkbox-group">
                     <input type="checkbox" id="privacyAgree" required>
-                    <label for="privacyAgree">我同意提供本次訂購所需的個人資料供店家聯絡、配送及處理訂單使用。</label>
+                    <label for="privacyAgree">我同意提供本次訂購所需的個人資料供店家聯絡、配送及處理訂單使用，並已閱讀下方服務與政策。</label>
                 </div>
 
                 <div style="background: #f9f6f0; padding: 18px; border-radius: 8px; margin: 20px 0; font-weight: bold; display: flex; justify-content: space-between; align-items: center;">
@@ -231,7 +288,7 @@
             <div id="submitResult"></div>
         </div>
 
-        <!-- 4. 免登入快速查詢訂單 -->
+        <!-- 4. 免登入快速查詢訂單狀態 -->
         <div class="section-card" id="orderSearch">
             <h2 style="margin-top:0;">🔍 快速查詢訂單狀態</h2>
             <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">輸入訂單編號與手機號碼即可查看製作與取貨進度。</p>
@@ -249,9 +306,40 @@
             </div>
             <div id="orderResult"></div>
         </div>
+
+        <!-- 5. 服務與政策區塊 -->
+        <div class="policy-section" id="policy">
+            <h3>📋 服務與政策 / 條款說明</h3>
+            
+            <h4>1. 使用者條款</h4>
+            <ul>
+                <li>本網站提供免登入快速線上預訂服務，使用者於填寫預訂資料時，應保證提供真實、正確且完整的個人資料。</li>
+                <li>當您送出線上預訂表單並獲得系統產生的「訂單編號」後，即完成預訂程序。店家保留是否接受訂單之權利。</li>
+                <li>若需修改或取消訂單，請提前透過電話或官方通訊軟體與店家聯繫確認。</li>
+            </ul>
+
+            <h4>2. 隱私權政策</h4>
+            <ul>
+                <li>本網站蒐集您的姓名、聯絡電話、取貨時間及配送地址等資訊，其目的僅為進行線上預訂處理、商品配送與訂單查詢。</li>
+                <li>本網站採取安全防護措施將您的個人資料妥善保存，除為完成配送或依法律規定外，絕不會將個資外洩或出售予第三人。</li>
+            </ul>
+
+            <h4>3. 生鮮食品通訊交易規範說明</h4>
+            <ul>
+                <li>依據「通訊交易解除權合理例外情事適用準則」及消保法規定，生鮮食品與手工烘焙商品具有保存期限短、易腐敗等特性，**不適用消費者保護法第 19 條之 7 日猶豫期解除權**。</li>
+                <li>商品一經下單製作或出貨後，恕不接受因個人主觀因素要求退貨或退款。</li>
+                <li>若收到商品時發現品項與訂單不符或嚴重瑕疵，請於到貨/取貨當日內保持商品原貌並立即拍照與店家聯繫處理。</li>
+            </ul>
+        </div>
     </div>
 
     <script>
+        // 切換手機版漢堡選單展開/收合
+        function toggleMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('active');
+        }
+
         const config = window.BREAD_CONFIG || {};
         let supabaseClient = null;
         let supabaseInitError = '';
